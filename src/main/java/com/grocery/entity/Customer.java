@@ -1,0 +1,41 @@
+package com.grocery.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "customers")
+public class Customer {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long customerId;
+	
+	@OneToOne
+	@JoinColumn(name = "user_id",nullable = false)
+	private User user;
+	
+	public Customer(User user) {
+		this.user = user;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+
+}
