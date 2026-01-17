@@ -35,12 +35,12 @@ public class ReturnRequest {
 		this.requestDate=LocalDateTime.now();
 	}
 
-	public ReturnRequest(Order order, String reason, String status, LocalDateTime requestDate) {
+	public ReturnRequest(Order order, String reason, String status) {
 		super();
 		this.order = order;
 		this.reason = reason;
 		this.status = status;
-		this.requestDate = requestDate;
+		this.requestDate = LocalDateTime.now();
 	}
 
 	public Long getReturnRequestsId() {
