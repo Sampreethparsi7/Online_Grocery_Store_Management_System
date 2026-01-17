@@ -2,16 +2,20 @@ package com.grocery.service;
 
 import org.springframework.stereotype.Service;
 
+import com.grocery.entity.Customer;
 import com.grocery.entity.User;
 import com.grocery.exception.DuplicateResourceException;
 import com.grocery.exception.ResourceNotFoundException;
+import com.grocery.repository.CustomerRepository;
 import com.grocery.repository.UserRepository;
 
 @Service
 public class AuthServiceImpl implements AuthService  {
 	 private final UserRepository userRepository;
-	    public AuthServiceImpl(UserRepository userRepository) {
+	 private final CustomerRepository customerRepository;
+	    public AuthServiceImpl(UserRepository userRepository, CustomerRepository customerRepository) {
 	        this.userRepository = userRepository;
+	        this.customerRepository = customerRepository;
 	    }
 
 	    @Override
@@ -20,7 +24,12 @@ public class AuthServiceImpl implements AuthService  {
 	            throw new DuplicateResourceException("Email already exists");
 	        }
 	        user.setStatus("ACTIVE");
-	        return userRepository.save(user);
+	        User savedUser = userRepository.save(user);
+	        if ("CUSTOMER".equalsIgnoreCase(savedUser.getRole())) {
+	            Customer customer = new Customer(savedUser);
+	            customerRepository.save(customer);
+	        }
+	        return savedUser;
 	    }
 
 	    @Override

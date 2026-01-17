@@ -20,6 +20,10 @@ public class Customer {
 	@JoinColumn(name = "user_id",nullable = false)
 	private User user;
 	
+	public Customer() {
+		
+	}
+	
 	public Customer(User user) {
 		this.user = user;
 	}

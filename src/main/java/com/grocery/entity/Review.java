@@ -38,13 +38,13 @@ public class Review {
 	        this.createdDate = LocalDateTime.now();
 	    }
 
-		public Review(Customer customer, Product product, int rating, String comment, LocalDateTime createdDate) {
-			super();
+		public Review(Customer customer, Product product, int rating, String comment) {
+	
 			this.customer = customer;
 			this.product = product;
 			this.rating = rating;
 			this.comment = comment;
-			this.createdDate = createdDate;
+			this.createdDate = LocalDateTime.now();
 		}
 
 		public Long getReviewId() {

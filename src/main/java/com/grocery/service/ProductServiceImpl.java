@@ -2,12 +2,17 @@ package com.grocery.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.grocery.entity.Product;
 import com.grocery.exception.ResourceNotFoundException;
 import com.grocery.repository.ProductRepository;
 
-public class ProductServiceImpl implements ProductService{
-	private final ProductRepository productRepository;
+@Service
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -16,6 +21,10 @@ public class ProductServiceImpl implements ProductService{
     public Product addProduct(Product product) {
         product.setAvailableStock(product.getTotalStock());
         product.setActive(true);
+
+        // final price logic
+        product.setFinalPrice(product.getSellingPrice());
+
         return productRepository.save(product);
     }
 
@@ -23,17 +32,23 @@ public class ProductServiceImpl implements ProductService{
     public Product updateProduct(Long productId, Product product) {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
         existingProduct.setProductName(product.getProductName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setMrp(product.getMrp());
         existingProduct.setSellingPrice(product.getSellingPrice());
         existingProduct.setDiscountAmount(product.getDiscountAmount());
+
+        // recalculate final price
+        existingProduct.setFinalPrice(product.getSellingPrice());
+
         existingProduct.setTotalStock(product.getTotalStock());
+        existingProduct.setAvailableStock(product.getTotalStock());
         existingProduct.setLowStockThreshold(product.getLowStockThreshold());
         existingProduct.setSponsored(product.isSponsored());
         existingProduct.setTodaySpecial(product.isTodaySpecial());
         existingProduct.setActive(product.isActive());
-        existingProduct.setAvailableStock(product.getTotalStock());
+
         return productRepository.save(existingProduct);
     }
 
@@ -51,7 +66,5 @@ public class ProductServiceImpl implements ProductService{
     public Product getProductById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
     }
-
 }

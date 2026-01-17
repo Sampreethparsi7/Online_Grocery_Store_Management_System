@@ -132,6 +132,11 @@ public class Product {
 	public double getFinalPrice() {
 		return finalPrice;
 	}
+	
+	public void setFinalPrice(double finalPrice) {
+		this.finalPrice = finalPrice;
+	}
+
 
 	
 
