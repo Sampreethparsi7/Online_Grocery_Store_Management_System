@@ -34,11 +34,11 @@ public class Wishlist {
 		this.addedDate = LocalDateTime.now();
 	}
 
-	public Wishlist(Customer customer, Product product, LocalDateTime addedDate) {
+	public Wishlist(Customer customer, Product product) {
 		super();
 		this.customer = customer;
 		this.product = product;
-		this.addedDate = addedDate;
+		this.addedDate = LocalDateTime.now();
 	}
 
 	public Long getWishlistId() {
