@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.grocery.entity.DeliveryExecutive;
 
 public interface DeliveryExecutiveRepository extends JpaRepository<DeliveryExecutive, Long> {
-	List<DeliveryExecutive>finadByAvailabilityStatus(String availabilityStatus);
+	List<DeliveryExecutive>findByAvailabilityStatus(String availabilityStatus);
 
 }

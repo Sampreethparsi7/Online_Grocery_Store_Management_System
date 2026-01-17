@@ -34,9 +34,7 @@ public class OrderItem {
 		
 	}
 
-	public OrderItem(Long orderItemId, Order order, Product product, int quantity, double price) {
-		super();
-		this.orderItemId = orderItemId;
+	public OrderItem(Order order, Product product, int quantity, double price) {
 		this.order = order;
 		this.product = product;
 		this.quantity = quantity;
