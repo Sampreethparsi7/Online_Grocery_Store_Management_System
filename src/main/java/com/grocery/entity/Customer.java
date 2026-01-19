@@ -20,6 +20,11 @@ public class Customer {
 	@JoinColumn(name = "user_id",nullable = false)
 	private User user;
 	
+	@OneToOne
+	@JoinColumn(name = "address_id")
+	private Address address;
+	
+	
 	public Customer() {
 		
 	}
@@ -39,6 +44,14 @@ public class Customer {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 

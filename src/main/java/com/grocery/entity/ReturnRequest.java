@@ -12,41 +12,76 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
+
 @Table(name = "return_requests")
+
 public class ReturnRequest {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long returnRequestsId;
-	
-	@ManyToOne
-	@JoinColumn(name = "order_id", nullable = false)
-	private Order order;
-	
-	@Column(nullable = false)
-	private String reason;
-	
-	@Column(nullable = false)
-	private String status;
-	
-	@Column(nullable = false)
-	private LocalDateTime requestDate;
 
-	public ReturnRequest() {
-		this.requestDate=LocalDateTime.now();
-	}
+    @Id
 
-	public ReturnRequest(Order order, String reason, String status) {
-		super();
-		this.order = order;
-		this.reason = reason;
-		this.status = status;
-		this.requestDate = LocalDateTime.now();
-	}
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-	public Long getReturnRequestsId() {
+    private Long returnRequestsId;
+
+    @ManyToOne
+
+    @JoinColumn(name = "order_id", nullable = false)
+
+    private Order order;
+
+ 
+
+    @ManyToOne
+
+    @JoinColumn(name = "pickup_executive_id")
+
+    private DeliveryExecutive pickupExecutive;
+
+    @Column(nullable = false)
+
+    private String reason;
+
+    @Column(nullable = false)
+
+    private String status;
+
+    @Column(nullable = false)
+
+    private LocalDateTime requestDate;
+
+    public ReturnRequest() {
+
+        this.requestDate = LocalDateTime.now();
+
+    }
+
+    public ReturnRequest(Order order, String reason, String status) {
+
+        this.order = order;
+
+        this.reason = reason;
+
+        this.status = status;
+
+        this.requestDate = LocalDateTime.now();
+
+    }
+
+
+
+    public DeliveryExecutive getPickupExecutive() {
+
+        return pickupExecutive;
+
+    }
+
+    public Long getReturnRequestsId() {
 		return returnRequestsId;
 	}
 
+	public void setReturnRequestsId(Long returnRequestsId) {
+		this.returnRequestsId = returnRequestsId;
+	}
 
 	public Order getOrder() {
 		return order;
@@ -76,10 +111,15 @@ public class ReturnRequest {
 		return requestDate;
 	}
 
+	public void setRequestDate(LocalDateTime requestDate) {
+		this.requestDate = requestDate;
+	}
 
-	
-	
-	
-	
+	public void setPickupExecutive(DeliveryExecutive pickupExecutive) {
+
+        this.pickupExecutive = pickupExecutive;
+
+    }
 
 }
+

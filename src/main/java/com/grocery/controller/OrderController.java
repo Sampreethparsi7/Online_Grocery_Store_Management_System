@@ -1,16 +1,20 @@
 package com.grocery.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.grocery.entity.Order;
+import com.grocery.mapper.OrderMapper;
+import com.grocery.response.OrderResponse;
 import com.grocery.service.OrderService;
 
 @RestController
@@ -18,26 +22,45 @@ import com.grocery.service.OrderService;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderMapper orderMapper;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService,
+                           OrderMapper orderMapper) {
         this.orderService = orderService;
+        this.orderMapper = orderMapper;
     }
 
     @PostMapping("/place")
-    public ResponseEntity<Order> placeOrder(@RequestParam Long customerId) {
+    public ResponseEntity<OrderResponse> placeOrder(@RequestParam Long customerId) {
         Order order = orderService.placeOrder(customerId);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(orderMapper.toOrderResponse(order));
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Order>> getOrdersByCustomer(@PathVariable Long customerId) {
-        List<Order> orders = orderService.getOrdersByCustomer(customerId);
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrderResponse>> getOrdersByCustomer(
+            @PathVariable Long customerId) {
+
+        List<OrderResponse> responses =
+                orderService.getOrdersByCustomer(customerId)
+                            .stream()
+                            .map(orderMapper::toOrderResponse)
+                            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long orderId) {
         Order order = orderService.getOrderById(orderId);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(orderMapper.toOrderResponse(order));
+    }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<OrderResponse> updateOrderStatus(
+            @RequestParam Long orderId,
+            @RequestParam String status) {
+
+        Order order = orderService.updateOrderStatus(orderId, status);
+        return ResponseEntity.ok(orderMapper.toOrderResponse(order));
     }
 }

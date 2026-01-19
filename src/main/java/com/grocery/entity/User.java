@@ -36,6 +36,10 @@ public class User {
 	
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
+	@Column(nullable = false)
+	private boolean enabled=true;
+	@Column(nullable = false)
+	private boolean accountNonLocked=true;
 
 	public User() {
 		this.createdAt = LocalDateTime.now();
@@ -108,6 +112,15 @@ public class User {
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public boolean isAccountNonLocked() {
+		return accountNonLocked;
+	}
+	
 
 	
 

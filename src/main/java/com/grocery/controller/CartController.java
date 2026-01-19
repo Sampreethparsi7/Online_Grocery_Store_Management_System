@@ -14,47 +14,74 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.grocery.entity.Cart;
 import com.grocery.entity.CartItem;
+import com.grocery.mapper.CartMapper;
+import com.grocery.response.CartResponse;
 import com.grocery.service.CartService;
 
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
-	private final CartService cartService;
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
-    }
 
-    @GetMapping("/{customerId}")
-    public ResponseEntity<Cart> getCart(@PathVariable Long customerId) {
-        return ResponseEntity.ok(cartService.getCartByCustomerId(customerId));
+    private final CartService cartService;
+    private final CartMapper cartMapper;
+
+    public CartController(CartService cartService, CartMapper cartMapper) {
+        this.cartService = cartService;
+        this.cartMapper = cartMapper;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CartItem> addToCart(@RequestParam Long customerId,
-                                              @RequestParam Long productId,
-                                              @RequestParam int quantity) {
+    public ResponseEntity<CartResponse> addToCart(@RequestParam Long customerId,
+                                                  @RequestParam Long productId,
+                                                  @RequestParam int quantity) {
+
+        cartService.addToCart(customerId, productId, quantity);
+
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        List<CartItem> cartItems = cartService.getCartItems(customerId);
+
         return ResponseEntity.ok(
-                cartService.addItemToCart(customerId, productId, quantity)
-        );
-    }
-    
-    @PutMapping("/update/{cartItemId}")
-    public ResponseEntity<CartItem> updateCartItem(@PathVariable Long cartItemId,
-                                                   @RequestParam int quantity) {
-        return ResponseEntity.ok(
-                cartService.updateCartItem(cartItemId, quantity)
+                cartMapper.toCartResponse(cart, cartItems)
         );
     }
 
-    @DeleteMapping("/remove/{cartItemId}")
-    public ResponseEntity<String> removeCartItem(@PathVariable Long cartItemId) {
-        cartService.removeCartItem(cartItemId);
-        return ResponseEntity.ok("Item removed from cart");
+    @PutMapping("/update")
+    public ResponseEntity<CartResponse> updateCartItem(@RequestParam Long customerId,
+                                                       @RequestParam Long productId,
+                                                       @RequestParam int quantity) {
+
+        cartService.updateCartItem(customerId, productId, quantity);
+
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        List<CartItem> cartItems = cartService.getCartItems(customerId);
+
+        return ResponseEntity.ok(
+                cartMapper.toCartResponse(cart, cartItems)
+        );
+    }
+
+    @DeleteMapping("/remove")
+    public ResponseEntity<CartResponse> removeFromCart(@RequestParam Long customerId,
+                                                       @RequestParam Long productId) {
+
+        cartService.removeFromCart(customerId, productId);
+
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        List<CartItem> cartItems = cartService.getCartItems(customerId);
+
+        return ResponseEntity.ok(
+                cartMapper.toCartResponse(cart, cartItems)
+        );
     }
 
     @GetMapping("/items/{customerId}")
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long customerId) {
-        return ResponseEntity.ok(cartService.getCartItems(customerId));
-    }
+    public ResponseEntity<CartResponse> getCart(@PathVariable Long customerId) {
 
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        List<CartItem> cartItems = cartService.getCartItems(customerId);
+
+        return ResponseEntity.ok(
+                cartMapper.toCartResponse(cart, cartItems)
+        );
+    }
 }

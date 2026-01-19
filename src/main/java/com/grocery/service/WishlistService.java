@@ -8,5 +8,6 @@ public interface WishlistService {
 	Wishlist addToWishlist(Long customerId, Long productId);
     void removeFromWishlist(Long wishlistId);
     List<Wishlist> getWishlistByCustomer(Long customerId);
+    void moveToCart(Long wishlistId);
 
 }
