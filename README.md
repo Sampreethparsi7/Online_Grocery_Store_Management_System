@@ -2,3 +2,5 @@
 The Online Grocery Store Management System is a backend application developed using Spring Boot to manage the complete operations of an online grocery store. The system enables customers to browse grocery products, manage carts and wishlists, place orders, track deliveries, request returns, and submit reviews. At the same time, the store owner can manage products, inventory, discounts, orders, delivery assignments, and sales reports. Delivery executives handle order deliveries and return pickups by updating order statuses.
 
 The application follows a layered architecture and exposes RESTful APIs that can be tested using Postman. It is designed specifically for a single store, ensuring simplified inventory and order management without multi-store complexity.
+
+The application uses JWT-based authentication, role-independent access, and follows a layered architecture.
