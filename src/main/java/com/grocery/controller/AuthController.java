@@ -1,15 +1,17 @@
 package com.grocery.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
 
 import com.grocery.entity.User;
+
+import com.grocery.security.JwtUtil;
+
 import com.grocery.service.AuthService;
 
 @RestController
@@ -20,13 +22,17 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    private final JwtUtil jwtUtil;
+
+    public AuthController(AuthService authService, JwtUtil jwtUtil) {
 
         this.authService = authService;
 
+        this.jwtUtil = jwtUtil;
+
     }
 
-    // REGISTER
+    //  REGISTER (NO JWT REQUIRED)
 
     @PostMapping("/register")
 
@@ -34,31 +40,55 @@ public class AuthController {
 
         User savedUser = authService.register(user);
 
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 
     }
 
-    // LOGIN (credential validation only)
+    //  LOGIN → RETURNS JWT TOKEN
 
     @PostMapping("/login")
 
-    public ResponseEntity<User> login(@RequestParam String email,
+    public ResponseEntity<Map<String, String>> login(
 
-                                      @RequestParam String password) {
+            @RequestParam String email,
+
+            @RequestParam String password) {
 
         User user = authService.login(email, password);
 
-        return ResponseEntity.ok(user);
+        String token = jwtUtil.generateToken(
+
+                user.getEmail(),
+
+                user.getRole()
+
+        );
+
+        return ResponseEntity.ok(
+
+                Map.of(
+
+                        "token", token,
+
+                        "role", user.getRole(),
+
+                        "email", user.getEmail()
+
+                )
+
+        );
 
     }
 
-    // FORGOT / RESET PASSWORD
+    //  FORGOT / RESET PASSWORD
 
     @PutMapping("/forgot-password")
 
-    public ResponseEntity<String> resetPassword(@RequestParam String email,
+    public ResponseEntity<String> resetPassword(
 
-                                                @RequestParam String newPassword) {
+            @RequestParam String email,
+
+            @RequestParam String newPassword) {
 
         authService.resetPassword(email, newPassword);
 
@@ -66,7 +96,7 @@ public class AuthController {
 
     }
 
-    // LOGOUT (Basic Auth – stateless)
+    // LOGOUT (JWT is stateless → frontend deletes token)
 
     @PostMapping("/logout")
 

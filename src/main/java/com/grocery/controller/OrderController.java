@@ -54,6 +54,17 @@ public class OrderController {
         Order order = orderService.getOrderById(orderId);
         return ResponseEntity.ok(orderMapper.toOrderResponse(order));
     }
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+
+        List<OrderResponse> responses =
+                orderService.getAllOrders()
+                        .stream()
+                        .map(orderMapper::toOrderResponse)
+                        .toList();
+
+        return ResponseEntity.ok(responses);
+    }
 
     @PutMapping("/update-status")
     public ResponseEntity<OrderResponse> updateOrderStatus(

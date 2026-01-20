@@ -9,5 +9,6 @@ public interface OrderService {
     Order getOrderById(Long orderId);
     List<Order> getOrdersByCustomer(Long customerId);
     Order updateOrderStatus(Long orderId, String status);
+    List<Order> getAllOrders();
 
 }

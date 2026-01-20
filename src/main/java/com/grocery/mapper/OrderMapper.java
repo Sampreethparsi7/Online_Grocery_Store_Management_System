@@ -1,11 +1,13 @@
 package com.grocery.mapper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.grocery.entity.Order;
+import com.grocery.entity.OrderItem;
 import com.grocery.response.DeliveryAddressResponse;
 import com.grocery.response.DeliveryExecutiveResponse;
 import com.grocery.response.OrderItemResponse;
@@ -17,6 +19,8 @@ public class OrderMapper {
 
     public OrderResponse toOrderResponse(Order order) {
 
+        // Address
+
         DeliveryAddressResponse address = new DeliveryAddressResponse(
 
                 order.getDeliveryAddressLine(),
@@ -26,6 +30,8 @@ public class OrderMapper {
                 order.getDeliveryPincode()
 
         );
+
+        // Delivery Executive (nullable)
 
         DeliveryExecutiveResponse executive = null;
 
@@ -45,23 +51,29 @@ public class OrderMapper {
 
         }
 
-        List<OrderItemResponse> items =
+    
 
-                order.getOrderItems()
+        List<OrderItem> orderItems =
 
-                     .stream()
+                order.getOrderItems() != null
 
-                     .map(item -> new OrderItemResponse(
+                        ? order.getOrderItems()
 
-                             item.getProduct().getProductId(),
+                        : Collections.emptyList();
 
-                             item.getProduct().getProductName(),
+        List<OrderItemResponse> items = orderItems.stream()
 
-                             item.getQuantity()
+                .map(item -> new OrderItemResponse(
 
-                     ))
+                        item.getProduct().getProductId(),
 
-                     .collect(Collectors.toList());
+                        item.getProduct().getProductName(),
+
+                        item.getQuantity()
+
+                ))
+
+                .collect(Collectors.toList());
 
         return new OrderResponse(
 

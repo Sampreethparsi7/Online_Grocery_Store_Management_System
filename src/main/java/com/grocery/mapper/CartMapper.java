@@ -34,7 +34,7 @@ public class CartMapper {
 
                             item.getQuantity(),
 
-                            item.getPrice(),   // unit price
+                            item.getPrice(),
 
                             lineTotal
 

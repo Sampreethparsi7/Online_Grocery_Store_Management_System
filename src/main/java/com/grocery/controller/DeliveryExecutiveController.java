@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,6 +65,23 @@ public class DeliveryExecutiveController {
         return ResponseEntity.ok(
 
                 deliveryExecutiveRepository.findByAvailabilityStatus("AVAILABLE"));
+
+    }
+    @PutMapping("/update-status")
+
+    public ResponseEntity<DeliveryExecutive> updateStatus(
+
+            @RequestParam Long deliveryExecutiveId,
+
+            @RequestParam String status) {
+
+        DeliveryExecutive executive = deliveryExecutiveRepository.findById(deliveryExecutiveId)
+
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery executive not found"));
+
+        executive.setAvailabilityStatus(status);
+
+        return ResponseEntity.ok(deliveryExecutiveRepository.save(executive));
 
     }
 

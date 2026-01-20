@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "addresses")
@@ -20,15 +21,19 @@ public class Address {
 	@JoinColumn(name = "customer_id",nullable = false)
 	private Customer customer;
 	
+	@NotBlank(message = "House number cannot be empty")
 	@Column(nullable = false)
 	private String hoseNo;
 	
+	@NotBlank(message = "Street cannot be empty")
 	@Column(nullable = false)
 	private String street;
 	
+	 @NotBlank(message = "City cannot be empty")
 	@Column(nullable = false)
 	private String city;
 	
+	 @NotBlank(message = "State cannot be empty")
 	@Column(nullable = false)
 	private String state;
 	

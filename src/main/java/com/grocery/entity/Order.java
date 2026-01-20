@@ -1,6 +1,7 @@
 package com.grocery.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -33,7 +34,7 @@ public class Order {
     private DeliveryExecutive deliveryExecutive;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems=new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime orderPlacedDate;
@@ -201,6 +202,10 @@ public class Order {
 
 	public List<OrderItem> getOrderItems() {
 		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 
     

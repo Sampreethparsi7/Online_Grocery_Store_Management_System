@@ -8,6 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "products")
@@ -16,30 +20,36 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productId;
-	
+	@NotBlank(message = "Product name is required")
 	@Column(nullable = false)
 	private String productName;
+	@NotBlank(message = "Description is required")
 	@Column(nullable = false)
 	private String description;
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id",nullable = false)
 	private Category category;
+	
+	 @Positive(message = "MRP must be > 0")
 	@Column(nullable = false)
 	private double mrp;
 	@Column(nullable = false)
+	
+	 @Positive(message = "Selling price must be > 0")
 	private double sellingPrice;
 	@Column(nullable = false)
+	 @PositiveOrZero(message = "Discount cannot be negative")
 	private double discountAmount;
 	@Column(nullable = false)
 	private double finalPrice;
-	
+	 @Min(value = 0, message = "Total stock cannot be negative")
 	@Column(nullable = false)
 	private int totalStock;
-	
+	  @Min(value = 0, message = "Available stock cannot be negative")
 	@Column(nullable = false)
 	private int availableStock;
-	
+	  @Min(value = 1, message = "Low stock threshold must be >= 1")
 	@Column(nullable = false)
 	private int lowStockThreshold;
 	
